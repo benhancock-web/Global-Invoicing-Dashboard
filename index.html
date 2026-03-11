@@ -242,12 +242,24 @@
   <div class="section-card">
     <div class="section-header">
       <div>
-        <h3>Actionable — Need to Raise / Ready for Invoice</h3>
+        <h3>To Be Invoiced - Records with an invoice status of "Ready to be invoiced"</h3>
         <div class="section-subtitle">Workspace → Board → Property</div>
       </div>
       <button class="config-btn" id="actionable-expand-btn" onclick="toggleAll('actionable-container', 'actionable-expand-btn', true)">Expand all</button>
     </div>
     <div id="actionable-container"><div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div></div>
+  </div>
+
+  <!-- Review Invoice Status -->
+  <div class="section-card" style="border-left: 3px solid #e2445c;">
+    <div class="section-header">
+      <div>
+        <h3>Review Invoice Status - Records ready to be marked "Need to raise invoice"</h3>
+        <div class="section-subtitle">Exchanged properties with no Invoice Status set · Workspace → Board → Property</div>
+      </div>
+      <button class="config-btn" id="review-expand-btn" onclick="toggleAll('review-container', 'review-expand-btn', true)">Expand all</button>
+    </div>
+    <div id="review-container"><div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div></div>
   </div>
 </main>
 
@@ -570,6 +582,44 @@
     container.innerHTML = buildNestedHtml(outerGroups, 'act', '');
   }
 
+  // ── Render Review Invoice Status ──────────────────────────────────────────────
+  function renderReviewInvoiceStatus(allItems) {
+    const container = document.getElementById('review-container');
+    if (!invoiceStatusColumn) {
+      container.innerHTML = '<div style="color:#e2445c;font-size:13px;padding:8px 0">⚠ Invoice Status column not configured.</div>';
+      return;
+    }
+    const byWs = {};
+    for (const entry of allItems) {
+      const p = processItem(entry);
+      if (!(p.spStatus || '').toLowerCase().includes('exchang')) continue;
+      if (p.invoiceStatus) continue;
+      const ws = p.workspaceName;
+      if (!byWs[ws]) byWs[ws] = { workspaceId: p.workspaceId, boards: {} };
+      if (!byWs[ws].boards[p.boardName]) byWs[ws].boards[p.boardName] = { boardId: p.boardId, items: [] };
+      byWs[ws].boards[p.boardName].items.push(p);
+    }
+    const sortedWs = Object.keys(byWs).sort((a,b) => a.localeCompare(b));
+    if (!sortedWs.length) {
+      container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No exchanged properties with missing Invoice Status found. ✓</div>';
+      return;
+    }
+    const outerGroups = sortedWs.map(wsName => {
+      const { workspaceId, boards } = byWs[wsName];
+      const sortedBoards = Object.keys(boards).sort((a,b) => a.localeCompare(b));
+      let count = 0;
+      const innerBoards = sortedBoards.map(boardName => {
+        const { boardId, items } = boards[boardName];
+        count += items.length;
+        return { boardName, boardId, items };
+      });
+      const wsUrl = workspaceId ? `https://${MONDAY_ACCOUNT}.monday.com/workspaces/${workspaceId}` : '#';
+      const titleHtml = `<a class="ws-link" href="${wsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escHtml(wsName)}</a>`;
+      return { titleHtml, count, meta: '', innerBoards };
+    });
+    container.innerHTML = buildNestedHtml(outerGroups, 'rev', '');
+  }
+
   // ── Toggle helpers ────────────────────────────────────────────────────────────
   function toggleEl(id) { document.getElementById(id)?.classList.toggle('open'); }
 
@@ -640,6 +690,7 @@
     const all = getCheckedItems();
     renderStatusSummary(all);
     renderActionableItems(all);
+    renderReviewInvoiceStatus(all);
     updateFilterBadge();
     const checked = boardsCache.filter(b => { const cb = document.getElementById(`cb-${b.id}`); return cb && cb.checked; }).length;
     document.getElementById('board-count-footer').textContent =
