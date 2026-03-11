@@ -9,29 +9,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Nunito Sans', 'Avenir Next', Avenir, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #f0f2f5;
-      color: #333;
-      min-height: 100vh;
+      background: #f0f2f5; color: #333; min-height: 100vh;
     }
-
-    /* ── Header ─────────────────────────────────────────────────────── */
     header {
-      background: #0C3C60;
-      color: #fff;
-      padding: 14px 32px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      background: #0C3C60; color: #fff; padding: 14px 32px;
+      display: flex; align-items: center; justify-content: space-between;
       box-shadow: 0 2px 8px rgba(0,0,0,0.18);
     }
     .header-brand { display: flex; align-items: center; gap: 16px; }
-    .header-logo-wrap {
-      background: #fff; border-radius: 8px; padding: 5px 12px;
-      display: flex; align-items: center;
-    }
+    .header-logo-wrap { background: #fff; border-radius: 8px; padding: 5px 12px; display: flex; align-items: center; }
     .header-logo { height: 32px; width: auto; display: block; }
     .header-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.25); }
     header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.3px; opacity: 0.9; }
@@ -43,10 +31,7 @@
     }
     #refresh-btn:hover { background: rgba(255,255,255,0.35); }
     #refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
     main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
-
-    /* ── Status / error bars ─────────────────────────────────────────── */
     #status-bar {
       background: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 16px;
       font-size: 13px; color: #555; border-left: 4px solid #0C3C60; display: none;
@@ -56,7 +41,7 @@
       font-size: 13px; color: #c0392b; border-left: 4px solid #e74c3c; display: none;
     }
 
-    /* ── Board filter panel ─────────────────────────────────────────── */
+    /* ── Board filter ────────────────────────────────────────────────── */
     #filter-panel {
       background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
       margin-bottom: 20px; overflow: hidden; display: none;
@@ -68,159 +53,105 @@
     }
     #filter-header:hover { background: #f7f9fc; }
     #filter-panel.open #filter-header { border-bottom-color: #e8ecf0; }
-    #filter-header-left {
-      display: flex; align-items: center; gap: 10px;
-      font-size: 13px; font-weight: 600; color: #444;
-    }
+    #filter-header-left { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #444; }
     #filter-toggle-arrow { font-size: 11px; color: #888; transition: transform 0.2s; display: inline-block; }
     #filter-panel.open #filter-toggle-arrow { transform: rotate(180deg); }
-    #filter-badge {
-      background: #0C3C60; color: #fff; font-size: 11px; font-weight: 700;
-      padding: 2px 7px; border-radius: 10px;
-    }
+    #filter-badge { background: #0C3C60; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
     #filter-badge.filtered { background: #fdab3d; }
     #filter-header-right { display: flex; gap: 8px; }
     .filter-action-btn {
-      font-size: 12px; padding: 4px 10px; border-radius: 5px;
-      border: 1px solid #d0d8e4; background: #fff; color: #555;
-      cursor: pointer; transition: background 0.15s, border-color 0.15s;
+      font-size: 12px; padding: 4px 10px; border-radius: 5px; border: 1px solid #d0d8e4;
+      background: #fff; color: #555; cursor: pointer; transition: background 0.15s, border-color 0.15s;
     }
     .filter-action-btn:hover { background: #f0f4fa; border-color: #0C3C60; color: #0C3C60; }
     #filter-body { padding: 14px 18px 16px; display: none; }
     #filter-panel.open #filter-body { display: block; }
-    #filter-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 16px;
-    }
-    .filter-item {
-      display: flex; align-items: center; gap: 8px; padding: 5px 6px;
-      border-radius: 5px; cursor: pointer; transition: background 0.12s;
-    }
+    #filter-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 6px 16px; }
+    .filter-item { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 5px; cursor: pointer; transition: background 0.12s; }
     .filter-item:hover { background: #f0f4fa; }
-    .filter-item input[type="checkbox"] {
-      width: 15px; height: 15px; accent-color: #0C3C60; cursor: pointer; flex-shrink: 0;
-    }
+    .filter-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0C3C60; cursor: pointer; flex-shrink: 0; }
     .filter-item label { font-size: 13px; color: #333; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     /* ── Section cards ───────────────────────────────────────────────── */
-    .section-card {
-      background: #fff; border-radius: 10px; padding: 20px;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 20px;
-    }
-    .section-header {
-      display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px;
-    }
+    .section-card { background: #fff; border-radius: 10px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); margin-bottom: 20px; }
+    .section-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 16px; }
     .section-header h3 { font-size: 15px; font-weight: 700; color: #222; }
-    .section-header .section-subtitle {
-      font-size: 12px; color: #999; font-weight: 400; margin-top: 2px;
-    }
+    .section-subtitle { font-size: 12px; color: #999; font-weight: 400; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
     .config-btn {
-      background: none; border: 1px solid #d0d8e4; color: #888;
-      padding: 5px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;
-      display: flex; align-items: center; gap: 5px; transition: all 0.15s; white-space: nowrap;
+      background: none; border: 1px solid #d0d8e4; color: #888; padding: 5px 12px;
+      border-radius: 6px; font-size: 12px; cursor: pointer; display: flex; align-items: center;
+      gap: 5px; transition: all 0.15s; white-space: nowrap;
     }
     .config-btn:hover { background: #f0f4fa; border-color: #0C3C60; color: #0C3C60; }
 
     /* ── Status pills ────────────────────────────────────────────────── */
     .status-pill {
-      display: inline-block; padding: 3px 10px; border-radius: 12px;
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.4px; color: #fff; background: #aaa; white-space: nowrap;
+      display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: #fff; background: #aaa; white-space: nowrap;
     }
     .status-pill.actionable { background: #faa1f1; color: #6b0060; }
     .status-pill.sent { background: #00c875; }
-    .status-pill.settled { background: #7f5347; color: #fff; }
+    .status-pill.settled { background: #7f5347; }
     .status-pill.suspended { background: #fdab3d; color: #6b4200; }
     .status-pill.lost { background: #e2445c; }
 
-    /* ── Shared collapsible group styles (used by BOTH sections) ─────── */
-    .collapsible-group {
-      border: 1px solid #e8ecf0; border-radius: 8px; margin-bottom: 8px; overflow: hidden;
-    }
-    .collapsible-header {
+    /* ── Level 1: Status / Workspace groups ──────────────────────────── */
+    .l1-group { border: 1px solid #e0e4ea; border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+    .l1-header {
       display: flex; align-items: center; justify-content: space-between;
       padding: 11px 16px; cursor: pointer; user-select: none;
-      background: #f7f9fc; transition: background 0.15s;
+      background: #f2f5f8; transition: background 0.15s;
     }
-    .collapsible-header:hover { background: #eef2f7; }
-    .collapsible-header-left {
-      display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0;
-    }
-    .collapsible-arrow {
-      font-size: 11px; color: #888; transition: transform 0.2s;
-      display: inline-block; flex-shrink: 0;
-    }
-    .collapsible-group.open .collapsible-arrow { transform: rotate(90deg); }
-    .collapsible-title {
-      font-size: 14px; font-weight: 700; color: #222; white-space: nowrap;
-      overflow: hidden; text-overflow: ellipsis;
-    }
-    .collapsible-count {
-      background: #0C3C60; color: #fff; font-size: 11px; font-weight: 700;
-      padding: 2px 8px; border-radius: 10px; flex-shrink: 0;
-    }
-    .collapsible-meta {
-      font-size: 12px; color: #999; margin-left: auto; padding-left: 12px; white-space: nowrap; flex-shrink: 0;
-    }
-    .collapsible-body { display: none; overflow-x: auto; }
-    .collapsible-group.open .collapsible-body { display: block; }
+    .l1-header:hover { background: #e8edf3; }
+    .l1-header-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+    .l1-arrow { font-size: 11px; color: #777; transition: transform 0.2s; display: inline-block; flex-shrink: 0; }
+    .l1-group.open .l1-arrow { transform: rotate(90deg); }
+    .l1-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+    .l1-count { background: #0C3C60; color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 10px; flex-shrink: 0; }
+    .l1-meta { font-size: 12px; color: #999; padding-left: 12px; white-space: nowrap; flex-shrink: 0; }
+    .l1-body { display: none; }
+    .l1-group.open .l1-body { display: block; }
 
-    /* ── Sub-groups (board level inside a status group) ──────────────── */
-    .sub-group {
-      border-top: 1px solid #f0f2f5;
-    }
-    .sub-group-header {
+    /* ── Level 2: Board groups ───────────────────────────────────────── */
+    .l2-group { border-top: 1px solid #eaecf0; }
+    .l2-header {
       display: flex; align-items: center; gap: 10px;
-      padding: 9px 16px 9px 28px; cursor: pointer; user-select: none;
-      background: #fff; transition: background 0.12s; border-bottom: 1px solid transparent;
+      padding: 9px 16px 9px 32px; cursor: pointer; user-select: none;
+      background: #fafbfc; transition: background 0.12s;
+      border-bottom: 1px solid transparent;
     }
-    .sub-group-header:hover { background: #f7f9fc; }
-    .sub-group.open .sub-group-header { border-bottom-color: #f0f2f5; }
-    .sub-group-arrow {
-      font-size: 10px; color: #bbb; transition: transform 0.2s; display: inline-block; flex-shrink: 0;
-    }
-    .sub-group.open .sub-group-arrow { transform: rotate(90deg); }
-    .sub-group-name {
-      font-size: 13px; font-weight: 600; color: #333; flex: 1;
-    }
-    .sub-group-count {
-      background: #e8ecf0; color: #555; font-size: 11px; font-weight: 700;
-      padding: 2px 7px; border-radius: 10px;
-    }
-    .sub-group-body { display: none; }
-    .sub-group.open .sub-group-body { display: block; }
+    .l2-header:hover { background: #f2f5f8; }
+    .l2-group.open .l2-header { border-bottom-color: #eaecf0; background: #f2f5f8; }
+    .l2-arrow { font-size: 10px; color: #bbb; transition: transform 0.2s; display: inline-block; flex-shrink: 0; }
+    .l2-group.open .l2-arrow { transform: rotate(90deg); }
+    .l2-name { font-size: 13px; font-weight: 600; color: #333; flex: 1; }
+    .l2-count { background: #e0e4ea; color: #444; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+    .l2-body { display: none; }
+    .l2-group.open .l2-body { display: block; }
 
-    /* ── Items table (shared by both sections) ───────────────────────── */
-    .items-table {
-      width: 100%; border-collapse: collapse; font-size: 12px;
-    }
+    /* ── Level 3: Items table ────────────────────────────────────────── */
+    .items-table { width: 100%; border-collapse: collapse; font-size: 12px; }
     .items-table thead th {
-      text-align: left; font-size: 10px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.5px; color: #888;
-      padding: 7px 12px 7px 36px; background: #fafbfc; border-bottom: 1px solid #eef0f3;
-      white-space: nowrap;
+      text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: #888; padding: 7px 12px 7px 48px;
+      background: #fff; border-bottom: 1px solid #eef0f3; white-space: nowrap;
     }
-    .items-table thead th:first-child { padding-left: 36px; }
     .items-table tbody tr:hover { background: #f7f9fc; }
     .items-table tbody td {
-      padding: 8px 12px 8px 36px; border-bottom: 1px solid #f0f2f5;
-      color: #333; vertical-align: middle;
+      padding: 8px 12px 8px 48px; border-bottom: 1px solid #f0f2f5; color: #333; vertical-align: middle;
     }
     .items-table tbody tr:last-child td { border-bottom: none; }
-    .property-link {
-      color: #0C3C60; text-decoration: none; font-weight: 600;
-    }
-    .property-link:hover { text-decoration: underline; color: #072136; }
-    .board-link {
-      color: #0C3C60; text-decoration: none; font-weight: 600;
-    }
-    .board-link:hover { text-decoration: underline; }
+    .property-link { color: #0C3C60; text-decoration: none; font-weight: 600; }
+    .property-link:hover { text-decoration: underline; }
+    .ws-link, .board-link { color: #0C3C60; text-decoration: none; font-weight: 600; }
+    .ws-link:hover, .board-link:hover { text-decoration: underline; }
     .date-cell { white-space: nowrap; color: #555; }
     .fee-cell { font-weight: 700; color: #0C3C60; white-space: nowrap; }
     .owner-cell { color: #555; }
     .sp-status-pill {
-      display: inline-block; padding: 2px 8px; border-radius: 10px;
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.3px; background: #eef0f3; color: #555; white-space: nowrap;
+      display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; background: #eef0f3; color: #555; white-space: nowrap;
     }
 
     /* ── Settings modal ─────────────────────────────────────────────── */
@@ -231,55 +162,30 @@
     #settings-overlay.open { display: flex; }
     #settings-modal {
       background: #fff; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-      width: 480px; max-width: 95vw; max-height: 80vh;
-      display: flex; flex-direction: column; overflow: hidden;
+      width: 480px; max-width: 95vw; max-height: 80vh; display: flex; flex-direction: column; overflow: hidden;
     }
-    #settings-modal-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 18px 22px 14px; border-bottom: 1px solid #eef0f3;
-    }
+    #settings-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px 14px; border-bottom: 1px solid #eef0f3; }
     #settings-modal-header h2 { font-size: 16px; font-weight: 700; color: #222; }
-    #settings-close-btn {
-      background: none; border: none; font-size: 20px;
-      color: #aaa; cursor: pointer; line-height: 1; padding: 2px 4px;
-    }
+    #settings-close-btn { background: none; border: none; font-size: 20px; color: #aaa; cursor: pointer; line-height: 1; padding: 2px 4px; }
     #settings-close-btn:hover { color: #333; }
     #settings-desc { font-size: 12px; color: #888; padding: 10px 22px 0; }
     #settings-col-list { overflow-y: auto; padding: 12px 22px 16px; flex: 1; }
-    .settings-col-item {
-      display: flex; align-items: center; gap: 10px; padding: 7px 8px;
-      border-radius: 6px; cursor: pointer; transition: background 0.12s;
-    }
+    .settings-col-item { display: flex; align-items: center; gap: 10px; padding: 7px 8px; border-radius: 6px; cursor: pointer; transition: background 0.12s; }
     .settings-col-item:hover { background: #f0f4fa; }
-    .settings-col-item input[type="radio"] {
-      width: 15px; height: 15px; accent-color: #0C3C60; cursor: pointer; flex-shrink: 0;
-    }
+    .settings-col-item input[type="radio"] { width: 15px; height: 15px; accent-color: #0C3C60; cursor: pointer; flex-shrink: 0; }
     .settings-col-item label { font-size: 13px; color: #333; cursor: pointer; flex: 1; }
-    #settings-modal-footer {
-      display: flex; align-items: center; gap: 10px;
-      padding: 14px 22px; border-top: 1px solid #eef0f3;
-    }
-    .settings-btn {
-      padding: 8px 20px; border-radius: 7px; font-size: 13px; font-weight: 600;
-      cursor: pointer; transition: background 0.15s;
-    }
+    #settings-modal-footer { display: flex; align-items: center; gap: 10px; padding: 14px 22px; border-top: 1px solid #eef0f3; }
+    .settings-btn { padding: 8px 20px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
     .settings-btn.cancel { background: #f0f2f5; border: 1px solid #d8dce2; color: #555; }
     .settings-btn.cancel:hover { background: #e4e7ec; }
     .settings-btn.save { background: #0C3C60; border: 1px solid #0C3C60; color: #fff; }
     .settings-btn.save:hover { background: #072136; }
 
     footer { text-align: center; padding: 20px 24px 28px; font-size: 12px; color: #aaa; }
-    footer .footer-brand { margin-top: 6px; font-size: 11px; color: #ccc; letter-spacing: 0.3px; }
+    .footer-brand { margin-top: 6px; font-size: 11px; color: #ccc; letter-spacing: 0.3px; }
 
-    @media (max-width: 900px) {
-      main { padding: 16px; }
-      #filter-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 600px) {
-      header { padding: 12px 16px; }
-      header h1 { font-size: 14px; }
-      #filter-grid { grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px) { main { padding: 16px; } #filter-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 600px) { header { padding: 12px 16px; } header h1 { font-size: 14px; } #filter-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -302,7 +208,6 @@
   <div id="status-bar"></div>
   <div id="error-bar"></div>
 
-  <!-- Board filter panel -->
   <div id="filter-panel">
     <div id="filter-header" onclick="toggleFilter()">
       <div id="filter-header-left">
@@ -315,26 +220,22 @@
         <button class="filter-action-btn" onclick="deselectAllBoards(event)">Deselect all</button>
       </div>
     </div>
-    <div id="filter-body">
-      <div id="filter-grid"></div>
-    </div>
+    <div id="filter-body"><div id="filter-grid"></div></div>
   </div>
 
-  <!-- Invoice Status Summary (collapsible groups) -->
+  <!-- Invoice Status Summary -->
   <div class="section-card">
     <div class="section-header">
       <div>
         <h3>Invoice Status Summary</h3>
-        <div class="section-subtitle">All properties grouped by Invoice Status — click a status to expand</div>
+        <div class="section-subtitle">Invoice Status → Workspace → Board → Property</div>
       </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <button class="config-btn" id="summary-expand-btn" onclick="toggleAllSummaryGroups()">Expand all</button>
-        <button class="config-btn" onclick="openColumnSettings()" title="Configure Invoice Status column">⚙ Configure column</button>
+      <div class="header-btns">
+        <button class="config-btn" id="summary-expand-btn" onclick="toggleAll('summary-container', 'summary-expand-btn', true)">Expand all</button>
+        <button class="config-btn" onclick="openColumnSettings()">⚙ Configure column</button>
       </div>
     </div>
-    <div id="summary-container">
-      <div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div>
-    </div>
+    <div id="summary-container"><div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div></div>
   </div>
 
   <!-- Actionable Items -->
@@ -342,15 +243,12 @@
     <div class="section-header">
       <div>
         <h3>Actionable — Need to Raise / Ready for Invoice</h3>
-        <div class="section-subtitle">Properties grouped by agent board — click a board to expand</div>
+        <div class="section-subtitle">Workspace → Board → Property</div>
       </div>
-      <button class="config-btn" id="actionable-expand-btn" onclick="toggleAllActionableGroups()">Expand all</button>
+      <button class="config-btn" id="actionable-expand-btn" onclick="toggleAll('actionable-container', 'actionable-expand-btn', true)">Expand all</button>
     </div>
-    <div id="actionable-container">
-      <div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div>
-    </div>
+    <div id="actionable-container"><div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div></div>
   </div>
-
 </main>
 
 <footer>
@@ -358,7 +256,6 @@
   <div class="footer-brand">© Momentum Sales Progression · momentumsp.co.uk</div>
 </footer>
 
-<!-- Column settings modal -->
 <div id="settings-overlay" onclick="closeColumnSettings()">
   <div id="settings-modal" onclick="event.stopPropagation()">
     <div id="settings-modal-header">
@@ -376,60 +273,41 @@
 </div>
 
 <script>
-  // ── Configuration ─────────────────────────────────────────────────────────────
   const MONDAY_API_TOKEN    = 'eyJhbGciOiJIUzI1NiJ9.eyJ0aWQiOjYzMDI2NDg3OCwiYWFpIjoxMSwidWlkIjo2ODIwNjY0OSwiaWFkIjoiMjAyNi0wMy0wOFQxMzo0MzowNS4zMDhaIiwicGVyIjoibWU6d3JpdGUiLCJhY3RpZCI6MjYzNTA4MzgsInJnbiI6ImV1YzEifQ.qQCDXtNRqTyn1vsYazhDnUtLakDm56YsGvabmSUfGtE';
   const MONDAY_ACCOUNT      = 'marks-team879428';
   const REFRESH_INTERVAL_MS = 3 * 60 * 60 * 1000;
   const API_URL             = 'https://api.monday.com/v2';
   const BOARD_FILTER_KEY    = 'msp-invoice-board-filter';
   const INVOICE_COL_KEY     = 'msp-invoice-column-config';
-
   const ACTIONABLE_PATTERNS = ['need to raise', 'ready for invoice', 'ready to invoice'];
 
-  // ── State ─────────────────────────────────────────────────────────────────────
-  let boardsCache          = [];
-  let boardItemsCache      = {};
-  let allDiscoveredColumns = [];
-  let invoiceStatusColumn  = '';
-  let summaryAllExpanded   = false;
-  let actionableAllExpanded = false;
+  let boardsCache = [], boardItemsCache = {}, allDiscoveredColumns = [], invoiceStatusColumn = '';
+  const expandState = {};  // track expand-all per container
 
   // ── Persistence ───────────────────────────────────────────────────────────────
-  function loadSavedFilter() {
-    try { return JSON.parse(localStorage.getItem(BOARD_FILTER_KEY) || '{}'); }
-    catch { return {}; }
-  }
+  function loadSavedFilter() { try { return JSON.parse(localStorage.getItem(BOARD_FILTER_KEY) || '{}'); } catch { return {}; } }
   function saveFilter() {
-    const state = {};
-    for (const board of boardsCache) {
-      const cb = document.getElementById(`cb-${board.id}`);
-      if (cb) state[board.id] = cb.checked;
-    }
-    localStorage.setItem(BOARD_FILTER_KEY, JSON.stringify(state));
+    const s = {};
+    boardsCache.forEach(b => { const cb = document.getElementById(`cb-${b.id}`); if (cb) s[b.id] = cb.checked; });
+    localStorage.setItem(BOARD_FILTER_KEY, JSON.stringify(s));
   }
   function loadSavedColumn() { return localStorage.getItem(INVOICE_COL_KEY) || ''; }
   function saveColumnConfig(t) { localStorage.setItem(INVOICE_COL_KEY, t); }
 
-  // ── Auto-detect invoice status column ────────────────────────────────────────
   function initInvoiceColumn() {
     const saved = loadSavedColumn();
     if (saved && allDiscoveredColumns.includes(saved)) { invoiceStatusColumn = saved; return; }
-    const exact   = allDiscoveredColumns.find(t => t === 'invoice status');
-    const partial = allDiscoveredColumns.find(t => t.includes('invoice') && t.includes('status'));
-    const fallback = allDiscoveredColumns.find(t => t.includes('invoice'));
-    invoiceStatusColumn = exact || partial || fallback || '';
+    invoiceStatusColumn = allDiscoveredColumns.find(t => t === 'invoice status')
+      || allDiscoveredColumns.find(t => t.includes('invoice') && t.includes('status'))
+      || allDiscoveredColumns.find(t => t.includes('invoice')) || '';
     if (invoiceStatusColumn) saveColumnConfig(invoiceStatusColumn);
   }
 
-  // ── API helper ────────────────────────────────────────────────────────────────
+  // ── API ───────────────────────────────────────────────────────────────────────
   async function gql(query, variables = {}) {
     const res = await fetch(API_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': MONDAY_API_TOKEN,
-        'API-Version': '2024-10'
-      },
+      headers: { 'Content-Type': 'application/json', 'Authorization': MONDAY_API_TOKEN, 'API-Version': '2024-10' },
       body: JSON.stringify({ query, variables })
     });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -438,27 +316,22 @@
     return json.data;
   }
 
-  // ── Discover boards ───────────────────────────────────────────────────────────
+  // ── Fetch boards (with workspace) ─────────────────────────────────────────────
   async function fetchAllSPBoards() {
-    const boards = [];
-    const colTitleSet = new Set();
+    const boards = [], colTitleSet = new Set();
     let page = 1;
     while (true) {
       const data = await gql(`
         query ($page: Int!, $limit: Int!) {
           boards(limit: $limit, page: $page, board_kind: share, state: active, order_by: created_at) {
-            id name columns { id title }
+            id name workspace { id name } columns { id title }
           }
         }`, { page, limit: 100 });
       const batch = (data.boards || []).filter(b => !b.name.toLowerCase().startsWith('subitems of'));
       for (const b of batch) {
         const colMap = {};
-        for (const col of (b.columns || [])) {
-          const lt = col.title.toLowerCase();
-          colMap[col.id] = lt;
-          colTitleSet.add(lt);
-        }
-        boards.push({ id: b.id, name: b.name, colMap });
+        for (const col of (b.columns || [])) { const lt = col.title.toLowerCase(); colMap[col.id] = lt; colTitleSet.add(lt); }
+        boards.push({ id: b.id, name: b.name, workspaceId: b.workspace?.id || '', workspaceName: b.workspace?.name || 'Unknown Workspace', colMap });
       }
       if ((data.boards || []).length < 100) break;
       page++;
@@ -467,55 +340,42 @@
     return boards;
   }
 
-  // ── Fetch items from one board ────────────────────────────────────────────────
+  // ── Fetch items ───────────────────────────────────────────────────────────────
   async function fetchBoardItems(boardId) {
-    const items = [];
-    let cursor = null;
+    const items = []; let cursor = null;
     while (true) {
-      let data;
+      let data, page;
       if (cursor) {
-        data = await gql(`
-          query ($cursor: String!, $limit: Int!) {
-            next_items_page(limit: $limit, cursor: $cursor) {
-              cursor
-              items { id name group { title } column_values { id text value ... on FormulaValue { display_value } } }
-            }
-          }`, { cursor, limit: 200 });
-        const p = data.next_items_page;
-        if (!p) break;
-        items.push(...(p.items || []));
-        cursor = p.cursor || null;
+        data = await gql(`query ($cursor: String!, $limit: Int!) {
+          next_items_page(limit: $limit, cursor: $cursor) {
+            cursor items { id name group { title } column_values { id text value ... on FormulaValue { display_value } } }
+          }}`, { cursor, limit: 200 });
+        page = data.next_items_page;
       } else {
-        data = await gql(`
-          query ($boardId: ID!, $limit: Int!) {
-            boards(ids: [$boardId]) {
-              items_page(limit: $limit) {
-                cursor
-                items { id name group { title } column_values { id text value ... on FormulaValue { display_value } } }
-              }
-            }
-          }`, { boardId: String(boardId), limit: 200 });
-        const p = data.boards?.[0]?.items_page;
-        if (!p) break;
-        items.push(...(p.items || []));
-        cursor = p.cursor || null;
+        data = await gql(`query ($boardId: ID!, $limit: Int!) {
+          boards(ids: [$boardId]) { items_page(limit: $limit) {
+            cursor items { id name group { title } column_values { id text value ... on FormulaValue { display_value } } }
+          }}}`, { boardId: String(boardId), limit: 200 });
+        page = data.boards?.[0]?.items_page;
       }
+      if (!page) break;
+      items.push(...(page.items || []));
+      cursor = page.cursor || null;
       if (!cursor) break;
     }
     return items;
   }
 
-  // ── Fetch all items (batched) ─────────────────────────────────────────────────
   async function fetchAndCacheAllItems(boards) {
     boardItemsCache = {};
     const BATCH = 5;
     for (let i = 0; i < boards.length; i += BATCH) {
       const slice = boards.slice(i, i + BATCH);
       const results = await Promise.all(slice.map(b =>
-        fetchBoardItems(b.id).then(items => ({ boardId: b.id, boardName: b.name, items, colMap: b.colMap }))
+        fetchBoardItems(b.id).then(items => ({ boardId: b.id, boardName: b.name, workspaceName: b.workspaceName, workspaceId: b.workspaceId, items, colMap: b.colMap }))
       ));
-      for (const { boardId, boardName, items, colMap } of results) {
-        boardItemsCache[boardId] = items.map(item => ({ item, colMap, boardName, boardId }));
+      for (const { boardId, boardName, workspaceName, workspaceId, items, colMap } of results) {
+        boardItemsCache[boardId] = items.map(item => ({ item, colMap, boardName, boardId, workspaceName, workspaceId }));
       }
       setStatus(`Loaded ${Math.min(i + BATCH, boards.length)} / ${boards.length} boards…`);
     }
@@ -523,285 +383,205 @@
 
   function getCheckedItems() {
     const all = [];
-    for (const board of boardsCache) {
-      const cb = document.getElementById(`cb-${board.id}`);
-      if (cb && cb.checked) all.push(...(boardItemsCache[board.id] || []));
-    }
+    for (const b of boardsCache) { const cb = document.getElementById(`cb-${b.id}`); if (cb && cb.checked) all.push(...(boardItemsCache[b.id] || [])); }
     return all;
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────────
   function extractFeeNumber(text, rawValue, displayValue) {
-    if (displayValue) {
-      const n = parseFloat(String(displayValue).replace(/[£,\s]/g, ''));
-      if (!isNaN(n) && n !== 0) return n;
-    }
-    const fromText = parseFloat((text || '').replace(/[£,\s]/g, ''));
-    if (!isNaN(fromText) && fromText !== 0) return fromText;
-    if (rawValue) {
-      try {
-        let p = JSON.parse(rawValue);
-        if (typeof p === 'string') p = JSON.parse(p);
-        if (typeof p === 'number') return p;
-        if (typeof p === 'string') { const n = parseFloat(p.replace(/[£,\s]/g, '')); if (!isNaN(n)) return n; }
-        if (p && typeof p.number === 'number') return p.number;
-      } catch {}
-    }
+    if (displayValue) { const n = parseFloat(String(displayValue).replace(/[£,\s]/g, '')); if (!isNaN(n) && n !== 0) return n; }
+    const ft = parseFloat((text || '').replace(/[£,\s]/g, '')); if (!isNaN(ft) && ft !== 0) return ft;
+    if (rawValue) { try { let p = JSON.parse(rawValue); if (typeof p === 'string') p = JSON.parse(p); if (typeof p === 'number') return p; } catch {} }
     return 0;
   }
-
-  function formatGBP(val) {
-    if (val >= 1_000_000) return '£' + (val / 1_000_000).toFixed(2) + 'm';
-    if (val >= 1_000)     return '£' + (val / 1_000).toFixed(1) + 'k';
-    return val > 0 ? '£' + val.toFixed(0) : '—';
-  }
-
-  function formatDate(text) {
-    if (!text || !text.trim()) return '—';
-    const m = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    return m ? `${m[3]}/${m[2]}/${m[1]}` : text;
-  }
-
-  function escHtml(str) {
-    return String(str || '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-  }
-
-  function isActionable(statusText) {
-    if (!statusText) return false;
-    const lower = statusText.toLowerCase();
-    return ACTIONABLE_PATTERNS.some(p => lower.includes(p));
-  }
-
-  function statusPillClass(statusText) {
-    if (!statusText) return '';
-    const lower = statusText.toLowerCase();
-    if (isActionable(statusText))  return 'actionable';
-    if (lower.includes('sent'))    return 'sent';
-    if (lower.includes('settled')) return 'settled';
-    if (lower.includes('suspended') || lower.includes('susp')) return 'suspended';
-    if (lower.includes('lost') || lower.includes('fallthrough') || lower.includes('fall')) return 'lost';
+  function formatGBP(v) { return v >= 1e6 ? '£'+(v/1e6).toFixed(2)+'m' : v >= 1000 ? '£'+(v/1000).toFixed(1)+'k' : v > 0 ? '£'+v.toFixed(0) : '—'; }
+  function formatDate(t) { if (!t?.trim()) return '—'; const m = t.match(/^(\d{4})-(\d{2})-(\d{2})/); return m ? `${m[3]}/${m[2]}/${m[1]}` : t; }
+  function escHtml(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function isActionable(s) { if (!s) return false; const l = s.toLowerCase(); return ACTIONABLE_PATTERNS.some(p => l.includes(p)); }
+  function pillClass(s) {
+    if (!s) return '';
+    const l = s.toLowerCase();
+    if (isActionable(s)) return 'actionable';
+    if (l.includes('sent')) return 'sent';
+    if (l.includes('settled')) return 'settled';
+    if (l.includes('suspended') || l.includes('susp')) return 'suspended';
+    if (l.includes('lost') || l.includes('fall')) return 'lost';
     return '';
   }
 
-  // ── Process one item ──────────────────────────────────────────────────────────
-  function processItem({ item, colMap, boardName, boardId }) {
-    let owner = '—', spStatus = item.group?.title || '—';
-    let exchangeDate = '', completionDate = '', fee = 0, invoiceStatus = '';
+  function processItem({ item, colMap, boardName, boardId, workspaceName, workspaceId }) {
+    let owner = '—', spStatus = item.group?.title || '—', exchangeDate = '', completionDate = '', fee = 0, invoiceStatus = '';
     for (const cv of item.column_values) {
-      const t    = colMap[cv.id] || '';
-      const text = (cv.text || '').trim();
-      if (t === 'owner' || t === 'person')             { if (text) owner = text.split(',')[0].trim(); }
-      else if (t === 'sp status')                      { if (text) spStatus = text; }
-      else if (t === 'exchange date')                  exchangeDate = text;
-      else if (t === 'completion date')                completionDate = text;
-      else if (t.includes('fee pipeline'))             fee = extractFeeNumber(text, cv.value, cv.display_value);
+      const t = colMap[cv.id] || '', text = (cv.text || '').trim();
+      if (t === 'owner' || t === 'person')                     { if (text) owner = text.split(',')[0].trim(); }
+      else if (t === 'sp status')                              { if (text) spStatus = text; }
+      else if (t === 'exchange date')                          exchangeDate = text;
+      else if (t === 'completion date')                        completionDate = text;
+      else if (t.includes('fee pipeline'))                     fee = extractFeeNumber(text, cv.value, cv.display_value);
       else if (invoiceStatusColumn && t === invoiceStatusColumn) invoiceStatus = text;
     }
-    return { id: item.id, name: item.name || '(unnamed)', boardName, boardId,
-              owner, spStatus, exchangeDate, completionDate, fee, invoiceStatus };
+    return { id: item.id, name: item.name || '(unnamed)', boardName, boardId, workspaceName: workspaceName || boardName, workspaceId: workspaceId || '', owner, spStatus, exchangeDate, completionDate, fee, invoiceStatus };
   }
 
-  // ── Build items table HTML (used in both sections) ────────────────────────────
-  function buildItemsTableHtml(items, indent) {
-    const indentPx = indent ? `padding-left: ${indent}px` : '';
+  // ── Items table HTML ──────────────────────────────────────────────────────────
+  function buildItemsTable(items) {
     const rows = items.map(p => {
-      const itemUrl  = `https://${MONDAY_ACCOUNT}.monday.com/boards/${p.boardId}/pulses/${p.id}`;
-      const pillClass = statusPillClass(p.invoiceStatus);
+      const itemUrl = `https://${MONDAY_ACCOUNT}.monday.com/boards/${p.boardId}/pulses/${p.id}`;
       return `<tr>
-        <td style="${indentPx}"><a class="property-link" href="${itemUrl}" target="_blank" rel="noopener">${escHtml(p.name)}</a></td>
+        <td><a class="property-link" href="${itemUrl}" target="_blank" rel="noopener">${escHtml(p.name)}</a></td>
         <td class="owner-cell">${escHtml(p.owner)}</td>
         <td><span class="sp-status-pill">${escHtml(p.spStatus)}</span></td>
         <td class="date-cell">${formatDate(p.exchangeDate)}</td>
         <td class="date-cell">${formatDate(p.completionDate)}</td>
         <td class="fee-cell">${formatGBP(p.fee)}</td>
-        <td><span class="status-pill ${pillClass}">${escHtml(p.invoiceStatus || '—')}</span></td>
+        <td><span class="status-pill ${pillClass(p.invoiceStatus)}">${escHtml(p.invoiceStatus || '—')}</span></td>
       </tr>`;
     }).join('');
     return `<table class="items-table">
-      <thead><tr>
-        <th>Property Detail</th><th>Owner</th><th>SP Status</th>
-        <th>Exchange Date</th><th>Completion Date</th><th>(£) Fee</th><th>Invoice Status</th>
-      </tr></thead>
+      <thead><tr><th>Property Detail</th><th>Owner</th><th>SP Status</th><th>Exchange Date</th><th>Completion Date</th><th>(£) Fee</th><th>Invoice Status</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>`;
   }
 
-  // ── Render Invoice Status Summary (collapsible by status, then by board) ──────
-  function renderStatusSummary(allItems) {
-    const container = document.getElementById('summary-container');
-
-    if (!invoiceStatusColumn) {
-      container.innerHTML = '<div style="color:#e2445c;font-size:13px;padding:8px 0">⚠ Invoice Status column not configured — click ⚙ Configure column above.</div>';
-      return;
-    }
-
-    // Group: status → board → [processedItems]
-    const byStatus = {};
-    let totalItems = 0;
-
-    for (const entry of allItems) {
-      const p = processItem(entry);
-      const statusLabel = p.invoiceStatus || '(Not set)';
-      if (!byStatus[statusLabel]) byStatus[statusLabel] = { byBoard: {}, count: 0 };
-      if (!byStatus[statusLabel].byBoard[p.boardName]) {
-        byStatus[statusLabel].byBoard[p.boardName] = { items: [], boardId: p.boardId };
-      }
-      byStatus[statusLabel].byBoard[p.boardName].items.push(p);
-      byStatus[statusLabel].count++;
-      totalItems++;
-    }
-
-    if (!Object.keys(byStatus).length) {
-      container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No data</div>';
-      return;
-    }
-
-    // Sort: actionable first, then by count desc
-    const sortedStatuses = Object.keys(byStatus).sort((a, b) => {
-      const aAct = isActionable(a) ? 1 : 0;
-      const bAct = isActionable(b) ? 1 : 0;
-      if (bAct !== aAct) return bAct - aAct;
-      return byStatus[b].count - byStatus[a].count;
-    });
-
-    let html = '';
-    sortedStatuses.forEach((statusLabel, si) => {
-      const { count, byBoard } = byStatus[statusLabel];
-      const pct = totalItems > 0 ? Math.round(count / totalItems * 100) : 0;
-      const groupId = `sum-group-${si}`;
-      const pillClass = statusPillClass(statusLabel);
-      const pillHtml = statusLabel !== '(Not set)'
-        ? `<span class="status-pill ${pillClass}">${escHtml(statusLabel)}</span>`
-        : `<span style="color:#bbb;font-size:12px;font-style:italic">(Not set)</span>`;
-
-      // Sort boards alphabetically
-      const sortedBoards = Object.keys(byBoard).sort((a, b) => a.localeCompare(b));
-
-      let subGroupsHtml = '';
-      sortedBoards.forEach((boardName, bi) => {
-        const { items, boardId } = byBoard[boardName];
-        const subId   = `${groupId}-board-${bi}`;
-        const boardUrl = `https://${MONDAY_ACCOUNT}.monday.com/boards/${boardId}`;
-        subGroupsHtml += `
-          <div class="sub-group" id="${subId}">
-            <div class="sub-group-header" onclick="toggleSubGroup('${subId}')">
-              <span class="sub-group-arrow">▶</span>
-              <span class="sub-group-name">
-                <a class="board-link" href="${boardUrl}" target="_blank" rel="noopener"
-                   onclick="event.stopPropagation()">${escHtml(boardName)}</a>
-              </span>
-              <span class="sub-group-count">${items.length}</span>
-            </div>
-            <div class="sub-group-body">
-              ${buildItemsTableHtml(items, 36)}
-            </div>
-          </div>`;
-      });
-
-      html += `
-        <div class="collapsible-group" id="${groupId}">
-          <div class="collapsible-header" onclick="toggleCollapsibleGroup('${groupId}')">
-            <div class="collapsible-header-left">
-              <span class="collapsible-arrow">▶</span>
-              <span class="collapsible-title">${pillHtml}</span>
-              <span class="collapsible-count">${count}</span>
-            </div>
-            <span class="collapsible-meta">${pct}% of total</span>
+  // ── Build nested L1→L2→items structure ───────────────────────────────────────
+  // outerGroups: { outerKey: { label, meta, innerGroups: { innerKey: { boardName, boardId, workspaceId, workspaceName, items } } } }
+  function buildNestedHtml(outerGroups, outerPrefix, l1BgClass) {
+    return outerGroups.map((outer, oi) => {
+      const l1id = `${outerPrefix}-l1-${oi}`;
+      const innerHtml = outer.innerBoards.map((board, bi) => {
+        const l2id   = `${l1id}-l2-${bi}`;
+        const boardUrl = `https://${MONDAY_ACCOUNT}.monday.com/boards/${board.boardId}`;
+        return `<div class="l2-group" id="${l2id}">
+          <div class="l2-header" onclick="toggleEl('${l2id}')">
+            <span class="l2-arrow">▶</span>
+            <span class="l2-name"><a class="board-link" href="${boardUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escHtml(board.boardName)}</a></span>
+            <span class="l2-count">${board.items.length}</span>
           </div>
-          <div class="collapsible-body">
-            ${subGroupsHtml}
-          </div>
+          <div class="l2-body">${buildItemsTable(board.items)}</div>
         </div>`;
-    });
-
-    container.innerHTML = html;
-    summaryAllExpanded = false;
-    updateExpandBtn('summary-expand-btn', false);
+      }).join('');
+      return `<div class="l1-group" id="${l1id}">
+        <div class="l1-header" onclick="toggleEl('${l1id}')">
+          <div class="l1-header-left">
+            <span class="l1-arrow">▶</span>
+            <span class="l1-title">${outer.titleHtml}</span>
+            <span class="l1-count">${outer.count}</span>
+          </div>
+          ${outer.meta ? `<span class="l1-meta">${outer.meta}</span>` : ''}
+        </div>
+        <div class="l1-body">${innerHtml}</div>
+      </div>`;
+    }).join('');
   }
 
-  // ── Render Actionable Items (grouped by board) ────────────────────────────────
-  function renderActionableItems(allItems) {
-    const container = document.getElementById('actionable-container');
-
+  // ── Render Invoice Status Summary ─────────────────────────────────────────────
+  function renderStatusSummary(allItems) {
+    const container = document.getElementById('summary-container');
     if (!invoiceStatusColumn) {
       container.innerHTML = '<div style="color:#e2445c;font-size:13px;padding:8px 0">⚠ Invoice Status column not configured — click ⚙ Configure column above.</div>';
       return;
     }
+    // Group: status → workspaceName → boardName → items
+    const byStatus = {};
+    let total = 0;
+    for (const entry of allItems) {
+      const p = processItem(entry);
+      const sl = p.invoiceStatus || '(Not set)';
+      if (!byStatus[sl]) byStatus[sl] = {};
+      const ws = p.workspaceName;
+      if (!byStatus[sl][ws]) byStatus[sl][ws] = { workspaceId: p.workspaceId, boards: {} };
+      if (!byStatus[sl][ws].boards[p.boardName]) byStatus[sl][ws].boards[p.boardName] = { boardId: p.boardId, items: [] };
+      byStatus[sl][ws].boards[p.boardName].items.push(p);
+      total++;
+    }
+    if (!Object.keys(byStatus).length) { container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No data</div>'; return; }
 
-    const byBoard = {};
-    const boardOrder = [];
+    const sortedStatuses = Object.keys(byStatus).sort((a, b) => {
+      const aA = isActionable(a) ? 1 : 0, bA = isActionable(b) ? 1 : 0;
+      if (bA !== aA) return bA - aA;
+      const aC = Object.values(byStatus[a]).reduce((s, ws) => s + Object.values(ws.boards).reduce((s2, b) => s2 + b.items.length, 0), 0);
+      const bC = Object.values(byStatus[b]).reduce((s, ws) => s + Object.values(ws.boards).reduce((s2, b) => s2 + b.items.length, 0), 0);
+      return bC - aC;
+    });
 
+    const outerGroups = sortedStatuses.map(statusLabel => {
+      const wsData = byStatus[statusLabel];
+      let count = 0;
+      const innerBoards = [];
+      const sortedWs = Object.keys(wsData).sort((a, b) => a.localeCompare(b));
+      // For summary: L1=status, L2=workspace+board combined — but we want workspace as L2 and board as L2 sub
+      // Actually render workspace groups as L2, with boards as L2 sub-items
+      // We'll flatten: one L2 per board, prefixed with workspace name if multiple workspaces
+      for (const wsName of sortedWs) {
+        const { boards } = wsData[wsName];
+        const sortedBoards = Object.keys(boards).sort((a,b) => a.localeCompare(b));
+        for (const boardName of sortedBoards) {
+          const { boardId, items } = boards[boardName];
+          innerBoards.push({ boardName: `${wsName} › ${boardName}`, boardId, items });
+          count += items.length;
+        }
+      }
+      const pc = total > 0 ? Math.round(count / total * 100) : 0;
+      const pc2 = statusLabel !== '(Not set)' ? `<span class="status-pill ${pillClass(statusLabel)}">${escHtml(statusLabel)}</span>` : `<span style="color:#bbb;font-size:12px;font-style:italic">(Not set)</span>`;
+      return { titleHtml: pc2, count, meta: `${pc}% of total`, innerBoards };
+    });
+
+    container.innerHTML = buildNestedHtml(outerGroups, 'sum', '');
+  }
+
+  // ── Render Actionable Items ───────────────────────────────────────────────────
+  function renderActionableItems(allItems) {
+    const container = document.getElementById('actionable-container');
+    if (!invoiceStatusColumn) {
+      container.innerHTML = '<div style="color:#e2445c;font-size:13px;padding:8px 0">⚠ Invoice Status column not configured.</div>';
+      return;
+    }
+    // Group: workspaceName → boardName → items
+    const byWs = {};
     for (const entry of allItems) {
       const p = processItem(entry);
       if (!isActionable(p.invoiceStatus)) continue;
-      if (!byBoard[p.boardName]) { byBoard[p.boardName] = { items: [], boardId: p.boardId }; boardOrder.push(p.boardName); }
-      byBoard[p.boardName].items.push(p);
+      const ws = p.workspaceName;
+      if (!byWs[ws]) byWs[ws] = { workspaceId: p.workspaceId, boards: {} };
+      if (!byWs[ws].boards[p.boardName]) byWs[ws].boards[p.boardName] = { boardId: p.boardId, items: [] };
+      byWs[ws].boards[p.boardName].items.push(p);
     }
 
-    boardOrder.sort((a, b) => a.localeCompare(b));
-
-    if (!boardOrder.length) {
+    const sortedWs = Object.keys(byWs).sort((a,b) => a.localeCompare(b));
+    if (!sortedWs.length) {
       container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No actionable items found.</div>';
-      updateExpandBtn('actionable-expand-btn', false);
       return;
     }
 
-    let html = '';
-    boardOrder.forEach((boardName, idx) => {
-      const { items, boardId } = byBoard[boardName];
-      const groupId  = `act-group-${idx}`;
-      const boardUrl = `https://${MONDAY_ACCOUNT}.monday.com/boards/${boardId}`;
-      html += `
-        <div class="collapsible-group" id="${groupId}">
-          <div class="collapsible-header" onclick="toggleCollapsibleGroup('${groupId}')">
-            <div class="collapsible-header-left">
-              <span class="collapsible-arrow">▶</span>
-              <span class="collapsible-title">
-                <a class="board-link" href="${boardUrl}" target="_blank" rel="noopener"
-                   onclick="event.stopPropagation()">${escHtml(boardName)}</a>
-              </span>
-              <span class="collapsible-count">${items.length}</span>
-            </div>
-          </div>
-          <div class="collapsible-body">
-            ${buildItemsTableHtml(items, 16)}
-          </div>
-        </div>`;
+    const outerGroups = sortedWs.map(wsName => {
+      const { workspaceId, boards } = byWs[wsName];
+      const sortedBoards = Object.keys(boards).sort((a,b) => a.localeCompare(b));
+      let count = 0;
+      const innerBoards = sortedBoards.map(boardName => {
+        const { boardId, items } = boards[boardName];
+        count += items.length;
+        return { boardName, boardId, items };
+      });
+      const wsUrl = workspaceId ? `https://${MONDAY_ACCOUNT}.monday.com/workspaces/${workspaceId}` : '#';
+      const titleHtml = `<a class="ws-link" href="${wsUrl}" target="_blank" rel="noopener" onclick="event.stopPropagation()">${escHtml(wsName)}</a>`;
+      return { titleHtml, count, meta: '', innerBoards };
     });
 
-    container.innerHTML = html;
-    actionableAllExpanded = false;
-    updateExpandBtn('actionable-expand-btn', false);
+    container.innerHTML = buildNestedHtml(outerGroups, 'act', '');
   }
 
   // ── Toggle helpers ────────────────────────────────────────────────────────────
-  function toggleCollapsibleGroup(id) {
-    document.getElementById(id)?.classList.toggle('open');
-  }
-  function toggleSubGroup(id) {
-    document.getElementById(id)?.classList.toggle('open');
-  }
+  function toggleEl(id) { document.getElementById(id)?.classList.toggle('open'); }
 
-  function toggleAllSummaryGroups() {
-    summaryAllExpanded = !summaryAllExpanded;
-    document.querySelectorAll('#summary-container .collapsible-group').forEach(el => {
-      summaryAllExpanded ? el.classList.add('open') : el.classList.remove('open');
-    });
-    updateExpandBtn('summary-expand-btn', summaryAllExpanded);
-  }
-
-  function toggleAllActionableGroups() {
-    actionableAllExpanded = !actionableAllExpanded;
-    document.querySelectorAll('#actionable-container .collapsible-group').forEach(el => {
-      actionableAllExpanded ? el.classList.add('open') : el.classList.remove('open');
-    });
-    updateExpandBtn('actionable-expand-btn', actionableAllExpanded);
-  }
-
-  function updateExpandBtn(btnId, expanded) {
+  function toggleAll(containerId, btnId, isL1) {
+    const container = document.getElementById(containerId);
     const btn = document.getElementById(btnId);
+    const key = containerId;
+    expandState[key] = !expandState[key];
+    const expanded = expandState[key];
+    container.querySelectorAll('.l1-group, .l2-group').forEach(el => {
+      expanded ? el.classList.add('open') : el.classList.remove('open');
+    });
     if (btn) btn.textContent = expanded ? 'Collapse all' : 'Expand all';
   }
 
@@ -809,98 +589,65 @@
   function buildFilterPanel(boards) {
     const grid = document.getElementById('filter-grid');
     grid.innerHTML = '';
-    const saved  = loadSavedFilter();
-    const sorted = [...boards].sort((a, b) => a.name.localeCompare(b.name));
-    for (const board of sorted) {
-      const item = document.createElement('div');
-      item.className = 'filter-item';
-      const cb = document.createElement('input');
-      cb.type = 'checkbox'; cb.id = `cb-${board.id}`;
+    const saved = loadSavedFilter();
+    [...boards].sort((a,b) => a.name.localeCompare(b.name)).forEach(board => {
+      const item = document.createElement('div'); item.className = 'filter-item';
+      const cb = document.createElement('input'); cb.type = 'checkbox'; cb.id = `cb-${board.id}`;
       cb.checked = board.id in saved ? saved[board.id] : true;
       cb.addEventListener('change', () => { saveFilter(); updateDisplay(); });
-      const label = document.createElement('label');
-      label.htmlFor = `cb-${board.id}`; label.textContent = board.name; label.title = board.name;
+      const label = document.createElement('label'); label.htmlFor = `cb-${board.id}`; label.textContent = board.name; label.title = board.name;
       item.appendChild(cb); item.appendChild(label);
       item.addEventListener('click', e => { if (e.target !== cb) cb.click(); });
       grid.appendChild(item);
-    }
+    });
     document.getElementById('filter-panel').style.display = 'block';
     updateFilterBadge();
   }
 
   function updateFilterBadge() {
-    const total   = boardsCache.length;
+    const total = boardsCache.length;
     const checked = boardsCache.filter(b => { const cb = document.getElementById(`cb-${b.id}`); return cb && cb.checked; }).length;
-    const badge   = document.getElementById('filter-badge');
+    const badge = document.getElementById('filter-badge');
     badge.textContent = checked === total ? `${total}` : `${checked} / ${total}`;
     badge.classList.toggle('filtered', checked !== total);
   }
 
   function toggleFilter() { document.getElementById('filter-panel').classList.toggle('open'); }
-  function selectAllBoards(e) {
-    e.stopPropagation();
-    boardsCache.forEach(b => { const cb = document.getElementById(`cb-${b.id}`); if (cb) cb.checked = true; });
-    saveFilter(); updateDisplay();
-  }
-  function deselectAllBoards(e) {
-    e.stopPropagation();
-    boardsCache.forEach(b => { const cb = document.getElementById(`cb-${b.id}`); if (cb) cb.checked = false; });
-    saveFilter(); updateDisplay();
-  }
+  function selectAllBoards(e) { e.stopPropagation(); boardsCache.forEach(b => { const cb = document.getElementById(`cb-${b.id}`); if (cb) cb.checked = true; }); saveFilter(); updateDisplay(); }
+  function deselectAllBoards(e) { e.stopPropagation(); boardsCache.forEach(b => { const cb = document.getElementById(`cb-${b.id}`); if (cb) cb.checked = false; }); saveFilter(); updateDisplay(); }
 
-  // ── Column settings modal ─────────────────────────────────────────────────────
+  // ── Column settings ───────────────────────────────────────────────────────────
   function openColumnSettings() {
-    const list = document.getElementById('settings-col-list');
-    list.innerHTML = '';
-    if (!allDiscoveredColumns.length) {
-      list.innerHTML = '<p style="color:#aaa;font-size:13px;padding:12px 22px">No columns discovered yet.</p>';
-    } else {
-      for (const colTitle of allDiscoveredColumns) {
-        const row = document.createElement('div');
-        row.className = 'settings-col-item';
-        const rb = document.createElement('input');
-        rb.type = 'radio'; rb.name = 'invoice-col-radio';
-        rb.id = `ic-${colTitle.replace(/\W/g, '_')}`; rb.value = colTitle;
-        rb.checked = colTitle === invoiceStatusColumn;
-        const lbl = document.createElement('label');
-        lbl.htmlFor = rb.id; lbl.textContent = colTitle;
-        row.appendChild(rb); row.appendChild(lbl);
-        row.addEventListener('click', e => { if (e.target !== rb) rb.click(); });
-        list.appendChild(row);
-      }
-    }
+    const list = document.getElementById('settings-col-list'); list.innerHTML = '';
+    allDiscoveredColumns.forEach(colTitle => {
+      const row = document.createElement('div'); row.className = 'settings-col-item';
+      const rb = document.createElement('input'); rb.type = 'radio'; rb.name = 'icr'; rb.id = `ic-${colTitle.replace(/\W/g,'_')}`; rb.value = colTitle; rb.checked = colTitle === invoiceStatusColumn;
+      const lbl = document.createElement('label'); lbl.htmlFor = rb.id; lbl.textContent = colTitle;
+      row.appendChild(rb); row.appendChild(lbl); row.addEventListener('click', e => { if (e.target !== rb) rb.click(); });
+      list.appendChild(row);
+    });
     document.getElementById('settings-overlay').classList.add('open');
   }
   function closeColumnSettings() { document.getElementById('settings-overlay').classList.remove('open'); }
   function saveColumnSettings() {
-    const selected = document.querySelector('#settings-col-list input[type="radio"]:checked');
-    if (selected) { invoiceStatusColumn = selected.value; saveColumnConfig(invoiceStatusColumn); updateDisplay(); }
+    const sel = document.querySelector('#settings-col-list input[type="radio"]:checked');
+    if (sel) { invoiceStatusColumn = sel.value; saveColumnConfig(invoiceStatusColumn); updateDisplay(); }
     closeColumnSettings();
   }
 
-  // ── Update display ────────────────────────────────────────────────────────────
+  // ── Display / status ──────────────────────────────────────────────────────────
   function updateDisplay() {
-    const allItems = getCheckedItems();
-    renderStatusSummary(allItems);
-    renderActionableItems(allItems);
+    const all = getCheckedItems();
+    renderStatusSummary(all);
+    renderActionableItems(all);
     updateFilterBadge();
-    updateFooter(allItems.length);
-  }
-
-  // ── UI helpers ────────────────────────────────────────────────────────────────
-  function setStatus(msg) {
-    const el = document.getElementById('status-bar');
-    el.style.display = msg ? 'block' : 'none'; el.textContent = msg;
-  }
-  function setError(msg) {
-    const el = document.getElementById('error-bar');
-    el.style.display = msg ? 'block' : 'none'; el.textContent = msg;
-  }
-  function updateFooter(totalItems) {
     const checked = boardsCache.filter(b => { const cb = document.getElementById(`cb-${b.id}`); return cb && cb.checked; }).length;
     document.getElementById('board-count-footer').textContent =
-      `Showing ${checked} of ${boardsCache.length} board${boardsCache.length !== 1 ? 's' : ''} · ${totalItems} items`;
+      `Showing ${checked} of ${boardsCache.length} board${boardsCache.length !== 1 ? 's' : ''} · ${all.length} items`;
   }
+
+  function setStatus(msg) { const el = document.getElementById('status-bar'); el.style.display = msg ? 'block' : 'none'; el.textContent = msg; }
+  function setError(msg)  { const el = document.getElementById('error-bar');  el.style.display = msg ? 'block' : 'none'; el.textContent = msg; }
 
   // ── Main load ─────────────────────────────────────────────────────────────────
   async function loadDashboard() {
@@ -910,7 +657,7 @@
       setStatus('Discovering boards…');
       boardsCache = await fetchAllSPBoards();
       if (!boardsCache.length) throw new Error('No active SP boards found.');
-      setStatus(`Found ${boardsCache.length} board${boardsCache.length !== 1 ? 's' : ''}. Loading items…`);
+      setStatus(`Found ${boardsCache.length} boards. Loading items…`);
       await fetchAndCacheAllItems(boardsCache);
       initInvoiceColumn();
       buildFilterPanel(boardsCache);
@@ -920,11 +667,8 @@
         `Last refreshed: ${new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
       setStatus('');
     } catch (err) {
-      setStatus(''); setError('Error loading dashboard: ' + err.message);
-      console.error(err);
-    } finally {
-      btn.disabled = false;
-    }
+      setStatus(''); setError('Error: ' + err.message); console.error(err);
+    } finally { btn.disabled = false; }
   }
 
   function triggerRefresh() { loadDashboard(); }
