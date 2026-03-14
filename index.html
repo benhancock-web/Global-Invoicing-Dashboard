@@ -181,6 +181,97 @@
     .settings-btn.save { background: #0C3C60; border: 1px solid #0C3C60; color: #fff; }
     .settings-btn.save:hover { background: #072136; }
 
+    /* ── Generate Invoices button ──────────────────────────────── */
+    .invoke-btn {
+      background: #0C3C60; border: none; color: #fff; padding: 7px 18px;
+      border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: background 0.15s; white-space: nowrap;
+    }
+    .invoke-btn:hover { background: #072136; }
+    .invoke-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* ── Approval modal ────────────────────────────────────────── */
+    #approval-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5); z-index: 1500; align-items: center; justify-content: center;
+    }
+    #approval-overlay.open { display: flex; }
+    #approval-modal {
+      background: #fff; border-radius: 14px; box-shadow: 0 12px 40px rgba(0,0,0,0.25);
+      width: 95vw; max-width: 1200px; max-height: 88vh; display: flex; flex-direction: column; overflow: hidden;
+    }
+    #approval-modal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px 16px; border-bottom: 1px solid #eef0f3; flex-shrink: 0;
+    }
+    #approval-modal-header h2 { font-size: 17px; font-weight: 700; color: #0C3C60; }
+    #approval-close-btn { background: none; border: none; font-size: 22px; color: #aaa; cursor: pointer; line-height: 1; padding: 2px 6px; }
+    #approval-close-btn:hover { color: #333; }
+    #approval-toolbar {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 12px 24px; border-bottom: 1px solid #f0f2f5; flex-shrink: 0; background: #fafbfc;
+    }
+    #approval-toolbar .toolbar-left { display: flex; align-items: center; gap: 10px; }
+    #approval-toolbar .toolbar-right { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #666; }
+    .approval-action-btn {
+      font-size: 12px; padding: 5px 12px; border-radius: 5px; border: 1px solid #d0d8e4;
+      background: #fff; color: #555; cursor: pointer; transition: background 0.15s;
+    }
+    .approval-action-btn:hover { background: #f0f4fa; border-color: #0C3C60; color: #0C3C60; }
+    #approval-body { overflow-y: auto; flex: 1; padding: 0; }
+    .approval-board-group { border-bottom: 1px solid #eef0f3; }
+    .approval-board-header {
+      font-size: 13px; font-weight: 700; color: #0C3C60; padding: 12px 24px 8px;
+      background: #f7f9fc; border-bottom: 1px solid #eef0f3; position: sticky; top: 0; z-index: 1;
+    }
+    .approval-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .approval-table thead th {
+      text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: #888; padding: 8px 10px; background: #fafbfc;
+      border-bottom: 1px solid #eef0f3; white-space: nowrap; position: sticky; top: 0;
+    }
+    .approval-table thead th:first-child { padding-left: 24px; width: 30px; }
+    .approval-table tbody td { padding: 8px 10px; border-bottom: 1px solid #f5f6f8; vertical-align: middle; }
+    .approval-table tbody td:first-child { padding-left: 24px; width: 30px; }
+    .approval-table tbody tr.deselected { opacity: 0.4; }
+    .approval-table tbody tr:hover { background: #f7f9fc; }
+    .approval-table input[type="checkbox"] { width: 15px; height: 15px; accent-color: #0C3C60; cursor: pointer; }
+    .approval-table .fee-input, .approval-table .discount-input {
+      width: 80px; padding: 4px 8px; border: 1px solid #d0d8e4; border-radius: 5px;
+      font-size: 12px; text-align: right; outline: none; transition: border-color 0.2s;
+    }
+    .approval-table .fee-input:focus, .approval-table .discount-input:focus { border-color: #0C3C60; }
+    .approval-table .fee-input:disabled, .approval-table .discount-input:disabled {
+      background: #f0f2f5; color: #bbb; border-color: #e8ecf0; cursor: not-allowed;
+    }
+    .approval-table .fee-cell, .approval-table .discount-cell { white-space: nowrap; }
+    .approval-table .final-fee { font-weight: 700; color: #0C3C60; white-space: nowrap; }
+    #approval-modal-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 24px; border-top: 1px solid #eef0f3; flex-shrink: 0; background: #fafbfc;
+    }
+    #approval-summary { font-size: 13px; color: #555; }
+    #approval-summary strong { color: #0C3C60; }
+    .confirm-invoke-btn {
+      background: #00c875; border: none; color: #fff; padding: 10px 28px;
+      border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;
+      transition: background 0.15s;
+    }
+    .confirm-invoke-btn:hover { background: #00a85e; }
+    .confirm-invoke-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #approval-progress {
+      display: none; padding: 20px 24px; text-align: center; font-size: 14px; color: #555;
+    }
+    #approval-progress .progress-spinner {
+      display: inline-block; width: 20px; height: 20px; border: 3px solid #e0e4ea;
+      border-top-color: #0C3C60; border-radius: 50%; animation: spin 0.8s linear infinite;
+      vertical-align: middle; margin-right: 10px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #approval-result { display: none; padding: 20px 24px; font-size: 14px; }
+    #approval-result.success { color: #00a85e; }
+    #approval-result.error { color: #e2445c; }
+
     /* ── Login overlay ──────────────────────────────────────────── */
     #login-overlay {
       position: fixed; inset: 0; z-index: 2000;
@@ -284,7 +375,10 @@
         <h3>To Be Invoiced - Records with an invoice status of "Ready to be invoiced"</h3>
         <div class="section-subtitle">Workspace → Board → Property</div>
       </div>
-      <button class="config-btn" id="actionable-expand-btn" onclick="toggleAll('actionable-container', 'actionable-expand-btn', true)">Expand all</button>
+      <div class="header-btns">
+        <button class="config-btn" id="actionable-expand-btn" onclick="toggleAll('actionable-container', 'actionable-expand-btn', true)">Expand all</button>
+        <button class="invoke-btn" id="invoke-btn" onclick="openApprovalModal()" style="display:none">Generate Invoices</button>
+      </div>
     </div>
     <div id="actionable-container"><div style="color:#aaa;font-size:13px;padding:8px 0">Loading…</div></div>
   </div>
@@ -306,6 +400,30 @@
   <div id="board-count-footer"></div>
   <div class="footer-brand">© Momentum Sales Progression · momentumsp.co.uk</div>
 </footer>
+
+<!-- Approval Modal -->
+<div id="approval-overlay" onclick="closeApprovalModal()">
+  <div id="approval-modal" onclick="event.stopPropagation()">
+    <div id="approval-modal-header">
+      <h2>Generate Invoices — Review &amp; Approve</h2>
+      <button id="approval-close-btn" onclick="closeApprovalModal()">✕</button>
+    </div>
+    <div id="approval-toolbar">
+      <div class="toolbar-left">
+        <button class="approval-action-btn" onclick="approvalSelectAll()">Select all</button>
+        <button class="approval-action-btn" onclick="approvalDeselectAll()">Deselect all</button>
+      </div>
+      <div class="toolbar-right" id="approval-count"></div>
+    </div>
+    <div id="approval-body"></div>
+    <div id="approval-progress"><span class="progress-spinner"></span> <span id="approval-progress-text">Generating invoices…</span></div>
+    <div id="approval-result"></div>
+    <div id="approval-modal-footer">
+      <div id="approval-summary"></div>
+      <button class="confirm-invoke-btn" id="confirm-invoke-btn" onclick="confirmInvoice()">Confirm &amp; Generate Invoices</button>
+    </div>
+  </div>
+</div>
 
 <div id="settings-overlay" onclick="closeColumnSettings()">
   <div id="settings-modal" onclick="event.stopPropagation()">
@@ -605,10 +723,16 @@
   }
 
   // ── Render Actionable Items ───────────────────────────────────────────────────
+  let actionableItemsByBoard = {};  // { boardId: [processedItem, ...] } — for approval modal
+
   function renderActionableItems(allItems) {
     const container = document.getElementById('actionable-container');
+    const invokeBtn = document.getElementById('invoke-btn');
+    actionableItemsByBoard = {};
+
     if (!invoiceStatusColumn) {
       container.innerHTML = '<div style="color:#e2445c;font-size:13px;padding:8px 0">⚠ Invoice Status column not configured.</div>';
+      invokeBtn.style.display = 'none';
       return;
     }
     // Group: workspaceName → boardName → items
@@ -620,13 +744,20 @@
       if (!byWs[ws]) byWs[ws] = { workspaceId: p.workspaceId, boards: {} };
       if (!byWs[ws].boards[p.boardName]) byWs[ws].boards[p.boardName] = { boardId: p.boardId, items: [] };
       byWs[ws].boards[p.boardName].items.push(p);
+      // Also store flat by boardId for approval modal
+      if (!actionableItemsByBoard[p.boardId]) actionableItemsByBoard[p.boardId] = { boardName: p.boardName, items: [] };
+      actionableItemsByBoard[p.boardId].items.push(p);
     }
 
     const sortedWs = Object.keys(byWs).sort((a,b) => a.localeCompare(b));
     if (!sortedWs.length) {
       container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No actionable items found.</div>';
+      invokeBtn.style.display = 'none';
       return;
     }
+
+    // Show the Generate Invoices button
+    invokeBtn.style.display = 'flex';
 
     const outerGroups = sortedWs.map(wsName => {
       const { workspaceId, boards } = byWs[wsName];
@@ -746,6 +877,208 @@
     const sel = document.querySelector('#settings-col-list input[type="radio"]:checked');
     if (sel) { invoiceStatusColumn = sel.value; saveColumnConfig(invoiceStatusColumn); updateDisplay(); }
     closeColumnSettings();
+  }
+
+  // ── Approval modal ──────────────────────────────────────────────────────────
+  let approvalItems = [];  // flat list of { ...processedItem, _checked, _feeOverride, _discountPct }
+
+  function openApprovalModal() {
+    approvalItems = [];
+    const body = document.getElementById('approval-body');
+    const sortedBoardIds = Object.keys(actionableItemsByBoard).sort((a, b) =>
+      actionableItemsByBoard[a].boardName.localeCompare(actionableItemsByBoard[b].boardName)
+    );
+
+    let html = '';
+    for (const boardId of sortedBoardIds) {
+      const { boardName, items } = actionableItemsByBoard[boardId];
+      html += `<div class="approval-board-group">
+        <div class="approval-board-header">${escHtml(boardName)} (${items.length})</div>
+        <table class="approval-table">
+          <thead><tr>
+            <th></th><th>Property</th><th>Owner</th><th>SP Status</th>
+            <th>Exchange</th><th>Completion</th><th>Fee (£)</th><th>Discount %</th><th>Final Fee</th>
+          </tr></thead><tbody>`;
+
+      for (const p of items) {
+        const idx = approvalItems.length;
+        approvalItems.push({ ...p, _checked: true, _feeOverride: null, _discountPct: null });
+        html += `<tr id="appr-row-${idx}">
+          <td><input type="checkbox" checked onchange="approvalToggleRow(${idx}, this.checked)" /></td>
+          <td style="font-weight:600;color:#0C3C60">${escHtml(p.name)}</td>
+          <td>${escHtml(p.owner)}</td>
+          <td><span class="sp-status-pill">${escHtml(p.spStatus)}</span></td>
+          <td class="date-cell">${formatDate(p.exchangeDate)}</td>
+          <td class="date-cell">${formatDate(p.completionDate)}</td>
+          <td class="fee-cell"><input class="fee-input" id="appr-fee-${idx}" type="number" step="0.01" min="0"
+            value="${p.fee.toFixed(2)}" onchange="approvalFeeChanged(${idx})" oninput="approvalFeeChanged(${idx})" /></td>
+          <td class="discount-cell"><input class="discount-input" id="appr-disc-${idx}" type="number" step="0.1" min="0" max="100"
+            value="" placeholder="—" onchange="approvalDiscChanged(${idx})" oninput="approvalDiscChanged(${idx})" /></td>
+          <td class="final-fee" id="appr-final-${idx}">${formatGBP(p.fee)}</td>
+        </tr>`;
+      }
+      html += '</tbody></table></div>';
+    }
+
+    body.innerHTML = html;
+    // Reset progress/result
+    document.getElementById('approval-progress').style.display = 'none';
+    document.getElementById('approval-result').style.display = 'none';
+    document.getElementById('approval-body').style.display = 'block';
+    document.getElementById('approval-modal-footer').style.display = 'flex';
+    document.getElementById('approval-toolbar').style.display = 'flex';
+    document.getElementById('confirm-invoke-btn').disabled = false;
+    updateApprovalSummary();
+    document.getElementById('approval-overlay').classList.add('open');
+  }
+
+  function closeApprovalModal() {
+    document.getElementById('approval-overlay').classList.remove('open');
+  }
+
+  function approvalToggleRow(idx, checked) {
+    approvalItems[idx]._checked = checked;
+    const row = document.getElementById(`appr-row-${idx}`);
+    row.classList.toggle('deselected', !checked);
+    updateApprovalSummary();
+  }
+
+  function approvalFeeChanged(idx) {
+    const feeInput = document.getElementById(`appr-fee-${idx}`);
+    const discInput = document.getElementById(`appr-disc-${idx}`);
+    const val = parseFloat(feeInput.value);
+    if (!isNaN(val) && val !== approvalItems[idx].fee) {
+      approvalItems[idx]._feeOverride = val;
+      approvalItems[idx]._discountPct = null;
+      discInput.value = '';
+      discInput.disabled = true;
+    } else if (feeInput.value === '' || val === approvalItems[idx].fee) {
+      approvalItems[idx]._feeOverride = null;
+      feeInput.value = approvalItems[idx].fee.toFixed(2);
+      discInput.disabled = false;
+    }
+    updateFinalFee(idx);
+    updateApprovalSummary();
+  }
+
+  function approvalDiscChanged(idx) {
+    const feeInput = document.getElementById(`appr-fee-${idx}`);
+    const discInput = document.getElementById(`appr-disc-${idx}`);
+    const val = parseFloat(discInput.value);
+    if (!isNaN(val) && val > 0) {
+      approvalItems[idx]._discountPct = val;
+      approvalItems[idx]._feeOverride = null;
+      feeInput.value = approvalItems[idx].fee.toFixed(2);
+      feeInput.disabled = true;
+    } else {
+      approvalItems[idx]._discountPct = null;
+      discInput.value = '';
+      feeInput.disabled = false;
+    }
+    updateFinalFee(idx);
+    updateApprovalSummary();
+  }
+
+  function getItemFinalFee(item) {
+    if (item._discountPct != null && item._discountPct > 0) {
+      return item.fee * (1 - item._discountPct / 100);
+    }
+    if (item._feeOverride != null) return item._feeOverride;
+    return item.fee;
+  }
+
+  function updateFinalFee(idx) {
+    const item = approvalItems[idx];
+    const final = getItemFinalFee(item);
+    document.getElementById(`appr-final-${idx}`).textContent = formatGBP(final);
+  }
+
+  function approvalSelectAll() {
+    approvalItems.forEach((item, idx) => {
+      item._checked = true;
+      const row = document.getElementById(`appr-row-${idx}`);
+      row.classList.remove('deselected');
+      row.querySelector('input[type="checkbox"]').checked = true;
+    });
+    updateApprovalSummary();
+  }
+
+  function approvalDeselectAll() {
+    approvalItems.forEach((item, idx) => {
+      item._checked = false;
+      const row = document.getElementById(`appr-row-${idx}`);
+      row.classList.add('deselected');
+      row.querySelector('input[type="checkbox"]').checked = false;
+    });
+    updateApprovalSummary();
+  }
+
+  function updateApprovalSummary() {
+    const selected = approvalItems.filter(i => i._checked);
+    const totalFee = selected.reduce((sum, i) => sum + getItemFinalFee(i), 0);
+    const boardIds = new Set(selected.map(i => i.boardId));
+    document.getElementById('approval-count').textContent =
+      `${selected.length} of ${approvalItems.length} items selected`;
+    document.getElementById('approval-summary').innerHTML =
+      `<strong>${selected.length}</strong> items across <strong>${boardIds.size}</strong> board${boardIds.size !== 1 ? 's' : ''} · Total fees: <strong>${formatGBP(totalFee)}</strong>`;
+    document.getElementById('confirm-invoke-btn').disabled = selected.length === 0;
+  }
+
+  async function confirmInvoice() {
+    const selected = approvalItems.filter(i => i._checked);
+    if (!selected.length) return;
+
+    // Build payload: group items by board, include final fees
+    const boardItems = {};
+    for (const item of selected) {
+      if (!boardItems[item.boardId]) boardItems[item.boardId] = [];
+      boardItems[item.boardId].push({ item_id: item.id, fee: Math.round(getItemFinalFee(item) * 100) / 100 });
+    }
+    const payload = {
+      board_ids: Object.keys(boardItems).map(Number),
+      item_fees: boardItems,
+      dry_run: false
+    };
+
+    // Show progress
+    document.getElementById('approval-body').style.display = 'none';
+    document.getElementById('approval-toolbar').style.display = 'none';
+    document.getElementById('approval-modal-footer').style.display = 'none';
+    document.getElementById('approval-progress').style.display = 'block';
+    document.getElementById('approval-result').style.display = 'none';
+    document.getElementById('approval-progress-text').textContent =
+      `Generating invoices for ${selected.length} items…`;
+
+    try {
+      const res = await fetch(CF_BASE_URL + '/invoke', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      document.getElementById('approval-progress').style.display = 'none';
+      const resultEl = document.getElementById('approval-result');
+      resultEl.style.display = 'block';
+
+      if (res.ok && json.success) {
+        resultEl.className = 'success';
+        const count = json.invoices_generated || selected.length;
+        resultEl.innerHTML = `✓ Successfully generated ${count} invoice${count !== 1 ? 's' : ''}. ` +
+          `PDFs and CSVs have been uploaded to Google Drive.<br><br>` +
+          `<button class="config-btn" onclick="closeApprovalModal(); triggerRefresh();" style="margin-top:8px">Close &amp; Refresh Dashboard</button>`;
+      } else {
+        resultEl.className = 'error';
+        resultEl.innerHTML = `✗ Error: ${escHtml(json.error || json.message || 'Unknown error')}<br><br>` +
+          `<button class="config-btn" onclick="closeApprovalModal();" style="margin-top:8px">Close</button>`;
+      }
+    } catch (err) {
+      document.getElementById('approval-progress').style.display = 'none';
+      const resultEl = document.getElementById('approval-result');
+      resultEl.style.display = 'block';
+      resultEl.className = 'error';
+      resultEl.innerHTML = `✗ Connection error: ${escHtml(err.message)}<br><br>` +
+        `<button class="config-btn" onclick="closeApprovalModal();" style="margin-top:8px">Close</button>`;
+    }
   }
 
   // ── Display / status ──────────────────────────────────────────────────────────
