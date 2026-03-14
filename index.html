@@ -23,6 +23,38 @@
     .header-logo { height: 32px; width: auto; display: block; }
     .header-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.25); }
     header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.3px; opacity: 0.9; }
+    /* ── Invoice counter widget ────────────────────────────────────── */
+    #counter-widget {
+      display: flex; align-items: center; gap: 10px;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 8px; padding: 6px 14px; margin-left: auto; margin-right: 20px;
+      font-size: 13px; white-space: nowrap;
+    }
+    #counter-widget .counter-label { opacity: 0.75; font-weight: 400; }
+    #counter-widget .counter-value {
+      font-weight: 800; font-size: 15px; letter-spacing: 0.5px;
+    }
+    #counter-widget .counter-prefix { opacity: 0.7; }
+    #counter-edit-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.35); color: #fff;
+      border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 11px;
+      opacity: 0.7; transition: opacity 0.2s, background 0.2s;
+    }
+    #counter-edit-btn:hover { opacity: 1; background: rgba(255,255,255,0.15); }
+    #counter-input {
+      width: 70px; background: rgba(255,255,255,0.9); border: none; border-radius: 4px;
+      padding: 3px 6px; font-size: 14px; font-weight: 700; color: #0C3C60;
+      text-align: center; display: none;
+    }
+    #counter-input:focus { outline: 2px solid #fdab3d; }
+    #counter-save-btn, #counter-cancel-btn {
+      background: none; border: 1px solid rgba(255,255,255,0.35); color: #fff;
+      border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 11px;
+      display: none; transition: opacity 0.2s, background 0.2s;
+    }
+    #counter-save-btn:hover { background: rgba(0,200,83,0.3); }
+    #counter-cancel-btn:hover { background: rgba(255,100,100,0.3); }
+
     #refresh-info { font-size: 13px; opacity: 0.85; text-align: right; }
     #refresh-btn {
       background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);
@@ -328,6 +360,16 @@
     <div class="header-divider"></div>
     <h1>Global Invoicing Dashboard</h1>
   </div>
+  <div id="counter-widget" style="display:none;">
+    <span class="counter-label">Next Invoice:</span>
+    <span class="counter-value">
+      <span class="counter-prefix" id="counter-prefix">A</span><span id="counter-number">—</span>
+    </span>
+    <input type="number" id="counter-input" min="1" />
+    <button id="counter-edit-btn" onclick="startEditCounter()" title="Change next invoice number">✎</button>
+    <button id="counter-save-btn" onclick="saveCounter()">Save</button>
+    <button id="counter-cancel-btn" onclick="cancelEditCounter()">Cancel</button>
+  </div>
   <div id="refresh-info">
     <div id="last-refresh-text">Loading…</div>
     <button id="refresh-btn" onclick="triggerRefresh()">↺ Refresh</button>
@@ -531,9 +573,11 @@
 
   // ── API (via Cloud Function proxy) ──────────────────────────────────────────
   async function cfFetch(endpoint, options = {}) {
+    const hdrs = { 'X-API-Key': apiKey, ...(options.headers || {}) };
+    if (options.body && !hdrs['Content-Type']) hdrs['Content-Type'] = 'application/json';
     const res = await fetch(CF_BASE_URL + endpoint, {
       ...options,
-      headers: { 'X-API-Key': apiKey, ...(options.headers || {}) }
+      headers: hdrs
     });
     if (res.status === 401) {
       // API key expired or invalid — force re-login
@@ -1096,6 +1140,55 @@
   function setStatus(msg) { const el = document.getElementById('status-bar'); el.style.display = msg ? 'block' : 'none'; el.textContent = msg; }
   function setError(msg)  { const el = document.getElementById('error-bar');  el.style.display = msg ? 'block' : 'none'; el.textContent = msg; }
 
+  // ── Invoice Counter Widget ──────────────────────────────────────────────────
+  async function loadCounter() {
+    try {
+      const data = await cfFetch('/counter');
+      document.getElementById('counter-prefix').textContent = data.prefix || 'A';
+      document.getElementById('counter-number').textContent = data.next_invoice_number || '—';
+      document.getElementById('counter-widget').style.display = 'flex';
+    } catch (err) {
+      console.error('Failed to load counter:', err);
+    }
+  }
+
+  function startEditCounter() {
+    const current = document.getElementById('counter-number').textContent;
+    const input = document.getElementById('counter-input');
+    input.value = current;
+    input.style.display = 'inline-block';
+    document.getElementById('counter-number').style.display = 'none';
+    document.getElementById('counter-edit-btn').style.display = 'none';
+    document.getElementById('counter-save-btn').style.display = 'inline-block';
+    document.getElementById('counter-cancel-btn').style.display = 'inline-block';
+    input.focus();
+    input.select();
+  }
+
+  function cancelEditCounter() {
+    document.getElementById('counter-input').style.display = 'none';
+    document.getElementById('counter-number').style.display = 'inline';
+    document.getElementById('counter-edit-btn').style.display = 'inline-block';
+    document.getElementById('counter-save-btn').style.display = 'none';
+    document.getElementById('counter-cancel-btn').style.display = 'none';
+  }
+
+  async function saveCounter() {
+    const input = document.getElementById('counter-input');
+    const newNum = parseInt(input.value, 10);
+    if (isNaN(newNum) || newNum < 1) { alert('Please enter a valid positive number.'); return; }
+    try {
+      const data = await cfFetch('/counter', {
+        method: 'POST',
+        body: JSON.stringify({ next_invoice_number: newNum }),
+      });
+      document.getElementById('counter-number').textContent = data.next_invoice_number;
+      cancelEditCounter();
+    } catch (err) {
+      alert('Failed to update counter: ' + err.message);
+    }
+  }
+
   // ── Main load ─────────────────────────────────────────────────────────────────
   async function loadDashboard() {
     if (!apiKey) { showLogin(); return; }
@@ -1111,6 +1204,7 @@
       buildFilterPanel(boardsCache);
       setStatus('Processing data…');
       updateDisplay();
+      loadCounter();
       document.getElementById('last-refresh-text').textContent =
         `Last refreshed: ${new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`;
       setStatus('');
