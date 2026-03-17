@@ -1311,8 +1311,9 @@
       `Updating status for ${selected.length} item${selected.length !== 1 ? 's' : ''}…`;
 
     try {
-      const res = await cfFetch('/update-status', {
+      const res = await fetch(CF_BASE_URL + '/update-status', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-API-Key': apiKey },
         body: JSON.stringify(payload)
       });
       const json = await res.json();
