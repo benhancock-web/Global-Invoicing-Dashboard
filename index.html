@@ -63,7 +63,7 @@
       font-size: 13px; transition: background 0.2s;
     }
     #refresh-btn:hover { background: rgba(255,255,255,0.35); }
-    #refresh-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    #refresh-btn { transition: background 0.2s, opacity 0.2s; }
     main { padding: 28px 32px; max-width: 1400px; margin: 0 auto; }
     #status-bar {
       background: #fff; border-radius: 8px; padding: 12px 20px; margin-bottom: 16px;
@@ -1205,7 +1205,7 @@
         const count = json.invoices_generated || selected.length;
         resultEl.innerHTML = `✓ Successfully generated ${count} invoice${count !== 1 ? 's' : ''}. ` +
           `PDFs and CSVs have been uploaded to Google Drive.<br><br>` +
-          `<button class="config-btn" onclick="closeApprovalModal(); triggerRefresh(2000);" style="margin-top:8px">Close &amp; Refresh Dashboard</button>`;
+          `<button class="config-btn" onclick="closeApprovalModal(); triggerRefresh(5000);" style="margin-top:8px">Close &amp; Refresh Dashboard</button>`;
       } else {
         resultEl.className = 'error';
         resultEl.innerHTML = `✗ Error: ${escHtml(json.error || json.message || 'Unknown error')}<br><br>` +
@@ -1342,13 +1342,13 @@
       if (res.ok && json.success) {
         resultEl.className = 'success';
         resultEl.innerHTML = `✓ Successfully updated ${json.updated} item${json.updated !== 1 ? 's' : ''} to "Need to Raise Invoice".<br><br>` +
-          `<button class="config-btn" onclick="closeUpdateStatusModal(); triggerRefresh(2000);" style="margin-top:8px">Close &amp; Refresh Dashboard</button>`;
+          `<button class="config-btn" onclick="closeUpdateStatusModal(); triggerRefresh(5000);" style="margin-top:8px">Close &amp; Refresh Dashboard</button>`;
       } else {
         const errMsg = json.error || (json.errors && json.errors.length ? json.errors.map(e => e.error).join('; ') : 'Unknown error');
         resultEl.className = 'error';
         resultEl.innerHTML = `✗ Error: ${escHtml(errMsg)}<br>` +
           (json.updated ? `<br>${json.updated} item(s) were updated before the error occurred.<br>` : '') +
-          `<br><button class="config-btn" onclick="closeUpdateStatusModal(); triggerRefresh(2000);" style="margin-top:8px">Close &amp; Refresh</button>`;
+          `<br><button class="config-btn" onclick="closeUpdateStatusModal(); triggerRefresh(5000);" style="margin-top:8px">Close &amp; Refresh</button>`;
       }
     } catch (err) {
       document.getElementById('ustatus-progress').style.display = 'none';
@@ -1425,10 +1425,24 @@
   }
 
   // ── Main load ─────────────────────────────────────────────────────────────────
+  let _isLoading = false;
+  let _refreshQueued = false;
+  let _pendingRefreshTimer = null;
+  let _pendingCountdown = null;
+
   async function loadDashboard() {
     if (!apiKey) { showLogin(); return; }
+    if (_isLoading) { _refreshQueued = true; return; }
+    // Cancel any pending delayed refresh since we're loading now
+    if (_pendingRefreshTimer) { clearTimeout(_pendingRefreshTimer); _pendingRefreshTimer = null; }
+    if (_pendingCountdown) { clearInterval(_pendingCountdown); _pendingCountdown = null; }
+    _isLoading = true;
+    _refreshQueued = false;
     const btn = document.getElementById('refresh-btn');
-    btn.disabled = true; setError(''); setStatus('Connecting…');
+    const origLabel = btn.textContent;
+    btn.textContent = '↺ Refreshing…';
+    btn.style.opacity = '0.6';
+    setError(''); setStatus('Connecting…');
     try {
       setStatus('Discovering boards…');
       boardsCache = await fetchAllSPBoards();
@@ -1445,13 +1459,33 @@
       setStatus('');
     } catch (err) {
       setStatus(''); setError('Error: ' + err.message); console.error(err);
-    } finally { btn.disabled = false; }
+    } finally {
+      _isLoading = false;
+      btn.textContent = '↺ Refresh';
+      btn.style.opacity = '';
+      if (_refreshQueued) { _refreshQueued = false; loadDashboard(); }
+    }
   }
 
   function triggerRefresh(delayMs) {
     if (delayMs) {
-      setStatus('Refreshing in a moment…');
-      setTimeout(() => loadDashboard(), delayMs);
+      // Cancel any existing pending refresh
+      if (_pendingRefreshTimer) { clearTimeout(_pendingRefreshTimer); }
+      if (_pendingCountdown) { clearInterval(_pendingCountdown); }
+      const btn = document.getElementById('refresh-btn');
+      let remaining = Math.ceil(delayMs / 1000);
+      btn.textContent = `↺ Refreshing in ${remaining}s…`;
+      btn.style.opacity = '0.6';
+      _pendingCountdown = setInterval(() => {
+        remaining--;
+        if (remaining > 0) { btn.textContent = `↺ Refreshing in ${remaining}s…`; }
+        else { clearInterval(_pendingCountdown); _pendingCountdown = null; }
+      }, 1000);
+      _pendingRefreshTimer = setTimeout(() => {
+        if (_pendingCountdown) { clearInterval(_pendingCountdown); _pendingCountdown = null; }
+        _pendingRefreshTimer = null;
+        loadDashboard();
+      }, delayMs);
     } else {
       loadDashboard();
     }
