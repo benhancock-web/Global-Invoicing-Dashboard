@@ -23,38 +23,39 @@
     .header-logo { height: 32px; width: auto; display: block; }
     .header-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.25); }
     header h1 { font-size: 18px; font-weight: 700; letter-spacing: 0.3px; opacity: 0.9; }
-    /* ── Invoice counter widget ────────────────────────────────────── */
+    /* ── Invoice counter widget (inside approval modal header) ────── */
     #counter-widget {
       display: flex; align-items: center; gap: 10px;
-      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25);
-      border-radius: 8px; padding: 6px 14px; margin-left: auto; margin-right: 20px;
-      font-size: 13px; white-space: nowrap;
+      background: #eef2f7; border: 1px solid #d0d8e4;
+      border-radius: 8px; padding: 6px 14px;
+      font-size: 13px; white-space: nowrap; color: #0C3C60;
     }
-    #counter-widget .counter-label { opacity: 0.75; font-weight: 400; }
+    #counter-widget .counter-label { opacity: 0.65; font-weight: 400; }
     #counter-widget .counter-value {
-      font-weight: 800; font-size: 15px; letter-spacing: 0.5px;
+      font-weight: 800; font-size: 15px; letter-spacing: 0.5px; color: #0C3C60;
     }
     #counter-widget .counter-prefix { opacity: 0.7; }
     #counter-edit-btn {
-      background: none; border: 1px solid rgba(255,255,255,0.35); color: #fff;
+      background: none; border: 1px solid #d0d8e4; color: #0C3C60;
       border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 11px;
       opacity: 0.7; transition: opacity 0.2s, background 0.2s;
     }
-    #counter-edit-btn:hover { opacity: 1; background: rgba(255,255,255,0.15); }
+    #counter-edit-btn:hover { opacity: 1; background: #dde4ed; }
     #counter-input {
-      width: 70px; background: rgba(255,255,255,0.9); border: none; border-radius: 4px;
+      width: 70px; background: #fff; border: 1px solid #d0d8e4; border-radius: 4px;
       padding: 3px 6px; font-size: 14px; font-weight: 700; color: #0C3C60;
       text-align: center; display: none;
     }
     #counter-input:focus { outline: 2px solid #fdab3d; }
     #counter-save-btn, #counter-cancel-btn {
-      background: none; border: 1px solid rgba(255,255,255,0.35); color: #fff;
+      background: none; border: 1px solid #d0d8e4; color: #0C3C60;
       border-radius: 5px; padding: 2px 8px; cursor: pointer; font-size: 11px;
       display: none; transition: opacity 0.2s, background 0.2s;
     }
-    #counter-save-btn:hover { background: rgba(0,200,83,0.3); }
-    #counter-cancel-btn:hover { background: rgba(255,100,100,0.3); }
+    #counter-save-btn:hover { background: rgba(0,200,83,0.2); }
+    #counter-cancel-btn:hover { background: rgba(255,100,100,0.2); }
 
+    .header-right { display: flex; align-items: center; gap: 16px; }
     #refresh-info { font-size: 13px; opacity: 0.85; text-align: right; }
     #refresh-btn {
       background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.5);
@@ -414,20 +415,12 @@
     <div class="header-divider"></div>
     <h1>Global Invoicing Dashboard</h1>
   </div>
-  <div id="counter-widget" style="display:none;">
-    <span class="counter-label">Next Invoice:</span>
-    <span class="counter-value">
-      <span class="counter-prefix" id="counter-prefix">A</span><span id="counter-number">—</span>
-    </span>
-    <input type="number" id="counter-input" min="1" />
-    <button id="counter-edit-btn" onclick="startEditCounter()" title="Change next invoice number">✎</button>
-    <button id="counter-save-btn" onclick="saveCounter()">Save</button>
-    <button id="counter-cancel-btn" onclick="cancelEditCounter()">Cancel</button>
-  </div>
-  <a id="back-to-main" href="https://reporting.flowintel.co.uk">← Back to Main</a>
-  <div id="refresh-info">
-    <div id="last-refresh-text">Loading…</div>
-    <button id="refresh-btn" onclick="triggerRefresh()">↺ Refresh</button>
+  <div class="header-right">
+    <a id="back-to-main" href="https://reporting.flowintel.co.uk">← Back to Main</a>
+    <div id="refresh-info">
+      <div id="last-refresh-text">Loading…</div>
+      <button id="refresh-btn" onclick="triggerRefresh()">↺ Refresh</button>
+    </div>
   </div>
 </header>
 
@@ -506,6 +499,16 @@
   <div id="approval-modal" onclick="event.stopPropagation()">
     <div id="approval-modal-header">
       <h2>Generate Invoices — Review &amp; Approve</h2>
+      <div id="counter-widget" style="display:none;">
+        <span class="counter-label">Next Invoice:</span>
+        <span class="counter-value">
+          <span class="counter-prefix" id="counter-prefix">A</span><span id="counter-number">—</span>
+        </span>
+        <input type="number" id="counter-input" min="1" />
+        <button id="counter-edit-btn" onclick="startEditCounter()" title="Change next invoice number">✎</button>
+        <button id="counter-save-btn" onclick="saveCounter()">Save</button>
+        <button id="counter-cancel-btn" onclick="cancelEditCounter()">Cancel</button>
+      </div>
       <button id="approval-close-btn" onclick="closeApprovalModal()">✕</button>
     </div>
     <div id="approval-toolbar">
