@@ -514,7 +514,7 @@
     <div class="section-header">
       <div>
         <h3>Review Invoice Status - Records ready to be marked "Need to raise invoice"</h3>
-        <div class="section-subtitle">Exchanged properties with no Invoice Status set · Workspace → Board → Property</div>
+        <div class="section-subtitle">Exchanged or Completed properties with no Invoice Status set · Workspace → Board → Property</div>
       </div>
       <div class="header-btns">
         <button class="config-btn" id="review-expand-btn" onclick="toggleAll('review-container', 'review-expand-btn', true)">Expand all</button>
@@ -962,7 +962,8 @@
     const byWs = {};
     for (const entry of allItems) {
       const p = processItem(entry);
-      if (!(p.spStatus || '').toLowerCase().includes('exchang')) continue;
+      const sp = (p.spStatus || '').toLowerCase();
+      if (!sp.includes('exchang') && !sp.includes('complet')) continue;
       if (p.invoiceStatus) continue;
       const ws = p.workspaceName;
       if (!byWs[ws]) byWs[ws] = { workspaceId: p.workspaceId, boards: {} };
@@ -974,7 +975,7 @@
     }
     const sortedWs = Object.keys(byWs).sort((a,b) => a.localeCompare(b));
     if (!sortedWs.length) {
-      container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No exchanged properties with missing Invoice Status found. ✓</div>';
+      container.innerHTML = '<div style="color:#aaa;font-size:13px;padding:8px 0;font-style:italic">No exchanged or completed properties with missing Invoice Status found. ✓</div>';
       if (ustatusBtn) ustatusBtn.style.display = 'none';
       return;
     }
